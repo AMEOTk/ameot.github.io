@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Личный Портфолио | Way to Resilience</title>
+    <style>
+        /* --- Эффект волшебной пыльцы --- */
+        .magic-particle {
+            position: absolute;
+            pointer-events: none; /* Чтобы сквозь них можно было кликать */
+            background: radial-gradient(circle, var(--primary-color) 0%, rgba(255,255,255,0) 70%);
+            border-radius: 50%;
+            z-index: 9999;
+            transform: translate(-50%, -50%); /* Центрируем относительно курсора */
+            animation: particleFade 0.8s ease-out forwards;
+        }
+
+        @keyframes particleFade {
+            0% {
+                width: 10px;
+                height: 10px;
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+            100% {
+                width: 25px;
+                height: 25px;
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(2);
+            }
+        }
+        /* --- 1. Основные настройки и переменные --- */
+        :root {
+            --primary-color: #d4a373; /* Мягкий золотисто-бежевый */
+            --secondary-color: #faedcd; /* Светлый крем */
+            --text-color: #333;
+            --bg-gradient: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.5);
+            --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-color);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* --- 2. Анимации --- */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(212, 163, 115, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(212, 163, 115, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(212, 163, 115, 0); }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Класс для JS анимации скролла */
+        .reveal {
+            opacity: 0;
+            transition: all 1s ease-out;
+            transform: translateY(30px);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- 3. Структура --- */
+        
+        /* Навигация */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.5);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Герой (Первый экран) */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 10%;
+            gap: 50px;
+            flex-wrap: wrap;
+        }
+
+        .hero-text {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .hero-text h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            background: -webkit-linear-gradient(#333, #666);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-text p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: #666;
+        }
+
+        .hero-img-container {
+            flex: 1;
+            min-width: 300px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
+
+        .hero-img {
+            width: 350px;
+            height: 450px;
+            object-fit: cover;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            animation: float 6s ease-in-out infinite;
+            border: 5px solid white;
+        }
+
+        /* Секции контента */
+        section {
+            padding: 100px 10%;
+        }
+
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-top: 50px;
+        }
+
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(8px);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: center;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+        }
+
+        .card-img {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .glass-card h3 {
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        /* --- 4. Кнопка менеджера (Telegram) --- */
+        .manager-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            box-shadow: 0 5px 20px rgba(212, 163, 115, 0.4);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+        }
+
+        .manager-btn:hover {
+            transform: scale(1.05);
+            background-color: #c58e5e;
+        }
+        
+        .manager-icon {
+            font-size: 1.2rem;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px;
+            background: #fff;
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        /* Адаптив */
+        @media (max-width: 768px) {
+            .hero-text h1 { font-size: 2.5rem; }
+            .hero { flex-direction: column-reverse; padding-top: 100px; }
+            .hero-img { width: 100%; max-width: 300px; height: auto; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">PORTFOLIO</div>
+    </nav>
+
+    <section class="hero">
+        <div class="hero-text reveal">
+            <h1>Привіт, я Світлана</h1>
+            <p>Фахівець з підтримки та особистісного зростання. Допомагаю знайти внутрішню опору та пройти шлях до стійкості.</p>
+        </div>
+        <div class="hero-img-container reveal">
+            <img src="photo1.jpg" alt="Портрет" class="hero-img">
+        </div>
+    </section>
+
+    <section id="about">
+        <div class="reveal">
+            <h2 style="text-align: center; margin-bottom: 20px; color: var(--primary-color);">Моя Діяльність</h2>
+            <p style="text-align: center; max-width: 700px; margin: 0 auto; color: #555;">
+                Я вірю, що кожна людина має внутрішнє світло. Моє завдання – допомогти вам його запалити.
+                Через професійні тренінги, метафоричні карти та особисті консультації ми знаходимо рішення для найскладніших ситуацій.
+            </p>
+        </div>
+
+        <div class="card-container">
+            <div class="glass-card reveal">
+                <img src="photo3.jpg" alt="Конференция" class="card-img">
+                <h3>Шлях до Стійкості</h3>
+                <p>Участь у міжнародних проектах та конференціях. Підтримка спільноти та розвиток емоційного інтелекту.</p>
+            </div>
+
+            <div class="glass-card reveal">
+                <img src="photo2.jpg" alt="Творчество" class="card-img">
+                <h3>Інструменти Роста</h3>
+                <p>Використання креативних методик, метафоричних карт та ігропрактик для глибокої роботи з підсвідомістю.</p>
+            </div>
+            
+             <div class="glass-card reveal" style="display: flex; flex-direction: column; justify-content: center;">
+                <h3>Особиста Консультація</h3>
+                <p>Індивідуальний підхід до кожного клієнта. Розбір ваших запитів у затишній та довірчій атмосфері.</p>
+                <br>
+                <a href="https://t.me/gngrt" style="color: var(--primary-color); text-decoration: none; font-weight: bold;">Записатись &rarr;</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2026 Усі права захищені. Зроблено з любов'ю.</p>
+    </footer>
+
+    <a href="https://t.me/gngrt" target="_blank" class="manager-btn">
+        <span class="manager-icon">✈️</span>
+        <span>Зв'язатись з менеджером</span>
+    </a>
+
+    <script>
+        // Функция для отслеживания появления элементов при скролле
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                var elementVisible = 150;
+
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add("active");
+                } else {
+                    // Раскомментируйте, если хотите, чтобы анимация исчезала при скролле вверх
+                    // reveals[i].classList.remove("active");
+                }
+            }
+        }
+
+        // Запуск при загрузке и скролле
+        window.addEventListener("scroll", reveal);
+        // Запускаем один раз сразу, чтобы показать верхние элементы
+        reveal();
+        // --- Скрипт для эффекта пыльцы ---
+        document.addEventListener('mousemove', function(e) {
+            // Создаем элемент частицы
+            let particle = document.createElement('div');
+            particle.className = 'magic-particle';
+
+            // Задаем позицию (учитываем прокрутку страницы)
+            particle.style.left = e.pageX + 'px';
+            particle.style.top = e.pageY + 'px';
+
+            // Добавляем на страницу
+            document.body.appendChild(particle);
+
+            // Удаляем частицу через 800мс, чтобы не засорять память
+            setTimeout(function() {
+                particle.remove();
+            }, 800);
+        });
+    </script>
+
+</body>
+</html>
